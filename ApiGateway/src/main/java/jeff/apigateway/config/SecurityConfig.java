@@ -106,15 +106,19 @@ public class SecurityConfig {
     	String[] allowedOriginsArr = {"*"}; 
 //    	允許的跨來源請求方法陣列，*為全部
     	String[] allowedMethodArr = {"*"}; 
+//    	要裸露的跨來源回應標頭，*為全部
+    	String[] exposedHeaders = {"*"}; 
 //    	跨來源相關設定
         CorsConfiguration corsConfig = new CorsConfiguration();
 //      設置允許的跨來源網域
         corsConfig.setAllowedOrigins(Arrays.asList(allowedOriginsArr));
 //      設置允許的跨來源請求方法
         corsConfig.setAllowedMethods(Arrays.asList(allowedMethodArr));
+//      設置回應的哪些標頭可以讓WEB瀏覽器使用於JS
+        corsConfig.setExposedHeaders(Arrays.asList(exposedHeaders));
 //      其餘沒設置的值，都設置預設值
         corsConfig.applyPermitDefaultValues();
-        
+//        Access-Control-Expose-Headers
         UrlBasedCorsConfigurationSource source = 
         		new UrlBasedCorsConfigurationSource();
 //      本伺服端哪些路徑會吃到上面的跨域設定。

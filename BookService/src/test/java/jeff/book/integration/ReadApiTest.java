@@ -24,6 +24,7 @@ public class ReadApiTest extends BookApiTestBase{
 	/**
 	 * 測試{@link BookController #queryAllBooks}的成功案例。</p>
 	 * 測試分頁與排序與pageSize是否正常。
+	 * 會先以AcquiredYear排序，然後相同的再以ID排序。
 	 * */
 	@Test
 	public void testSuccessfulCaseOfQueryAllBooks () {
@@ -35,9 +36,9 @@ public class ReadApiTest extends BookApiTestBase{
 		BookQueryRes body = res.getBody();
 		List<MyBook> page1 = body.getResult();
 		Assertions.assertEquals("BookService1",serverName);
-		Assertions.assertEquals("test1",page1.get(0).getId());
-		Assertions.assertEquals("test2",page1.get(1).getId());
-		Assertions.assertEquals("test3",page1.get(2).getId());
+		Assertions.assertEquals("test4",page1.get(0).getId());
+		Assertions.assertEquals("test5",page1.get(1).getId());
+		Assertions.assertEquals("test2",page1.get(2).getId());
 		Assertions.assertEquals(1,body.getNowPage());
 		Assertions.assertEquals(3,body.getPageSize());
 		Assertions.assertEquals(5,body.getTotalElements());
@@ -50,8 +51,8 @@ public class ReadApiTest extends BookApiTestBase{
 		BookQueryRes body2 = res2.getBody();
 		List<MyBook> page2 = body2.getResult();
 		Assertions.assertEquals("BookService1",serverName2);
-		Assertions.assertEquals("test4",page2.get(0).getId());
-		Assertions.assertEquals("test5",page2.get(1).getId());
+		Assertions.assertEquals("test3",page2.get(0).getId());
+		Assertions.assertEquals("test1",page2.get(1).getId());
 		Assertions.assertEquals(2,body2.getNowPage());
 		Assertions.assertEquals(3,body2.getPageSize());
 		Assertions.assertEquals(5,body2.getTotalElements());
@@ -64,9 +65,9 @@ public class ReadApiTest extends BookApiTestBase{
 		BookQueryRes body3 = res3.getBody();
 		List<MyBook> page1Desc = body3.getResult();
 		Assertions.assertEquals("BookService1",serverName3);
-		Assertions.assertEquals("test5",page1Desc.get(0).getId());
-		Assertions.assertEquals("test4",page1Desc.get(1).getId());
-		Assertions.assertEquals("test3",page1Desc.get(2).getId());
+		Assertions.assertEquals("test1",page1Desc.get(0).getId());
+		Assertions.assertEquals("test3",page1Desc.get(1).getId());
+		Assertions.assertEquals("test2",page1Desc.get(2).getId());
 		Assertions.assertEquals(1,body3.getNowPage());
 		Assertions.assertEquals(3,body3.getPageSize());
 		Assertions.assertEquals(5,body3.getTotalElements());
@@ -79,10 +80,10 @@ public class ReadApiTest extends BookApiTestBase{
 		BookQueryRes body4 = res4.getBody();
 		List<MyBook> page1Size4 = body4.getResult();
 		Assertions.assertEquals("BookService1",serverName4);
-		Assertions.assertEquals("test1",page1Size4.get(0).getId());
-		Assertions.assertEquals("test2",page1Size4.get(1).getId());
-		Assertions.assertEquals("test3",page1Size4.get(2).getId());
-		Assertions.assertEquals("test4",page1Size4.get(3).getId());
+		Assertions.assertEquals("test4",page1Size4.get(0).getId());
+		Assertions.assertEquals("test5",page1Size4.get(1).getId());
+		Assertions.assertEquals("test2",page1Size4.get(2).getId());
+		Assertions.assertEquals("test3",page1Size4.get(3).getId());
 		Assertions.assertEquals(1,body4.getNowPage());
 		Assertions.assertEquals(5,body4.getPageSize());
 		Assertions.assertEquals(5,body4.getTotalElements());
@@ -181,7 +182,8 @@ public class ReadApiTest extends BookApiTestBase{
 	/**
 	 * 測試{@link BookController #queryBooksByCondition}的成功案例。</p>
 	 * 入館年份區間，應該要連頭尾都算進去，例如查詢2010~2020，那就會抓出
-	 * 包含2010和2020的資料。
+	 * 包含2010和2020的資料。</p>
+	 * 會先以AcquiredYear排序，然後相同的再以ID排序。
 	 * */
 	@Test
 	public void testSuccessfulCaseOfQueryBooksByCondition () {
@@ -190,9 +192,9 @@ public class ReadApiTest extends BookApiTestBase{
 		String url = domain + OpenApiConst.Path.BOOK_R_COND + queryString;
 		BookQueryRes res = mockReq.getForObject(url, BookQueryRes.class);
 		List<MyBook> result = res.getResult();
-		Assertions.assertEquals("test1",result.get(0).getId());
-		Assertions.assertEquals("test2",result.get(1).getId());
-		Assertions.assertEquals("test3",result.get(2).getId());
+		Assertions.assertEquals("test4",result.get(0).getId());
+		Assertions.assertEquals("test5",result.get(1).getId());
+		Assertions.assertEquals("test2",result.get(2).getId());
 		Assertions.assertEquals(1,res.getNowPage());
 		Assertions.assertEquals(3,res.getPageSize());
 		Assertions.assertEquals(5,res.getTotalElements());
@@ -202,9 +204,9 @@ public class ReadApiTest extends BookApiTestBase{
 		url = domain + OpenApiConst.Path.BOOK_R_COND + queryString;
 		BookQueryRes res2 = mockReq.getForObject(url, BookQueryRes.class);
 		List<MyBook> condResult = res2.getResult();
-		Assertions.assertEquals("test3",condResult.get(0).getId());
-		Assertions.assertEquals("test4",condResult.get(1).getId());
-		Assertions.assertEquals("test5",condResult.get(2).getId());
+		Assertions.assertEquals("test4",condResult.get(0).getId());
+		Assertions.assertEquals("test5",condResult.get(1).getId());
+		Assertions.assertEquals("test3",condResult.get(2).getId());
 		Assertions.assertEquals(1,res2.getNowPage());
 		Assertions.assertEquals(3,res2.getPageSize());
 		Assertions.assertEquals(3,res2.getTotalElements());
@@ -214,9 +216,9 @@ public class ReadApiTest extends BookApiTestBase{
 		url = domain + OpenApiConst.Path.BOOK_R_COND + queryString;
 		BookQueryRes res3 = mockReq.getForObject(url, BookQueryRes.class);
 		List<MyBook> condResult2 = res3.getResult();
-		Assertions.assertEquals("test2",condResult2.get(0).getId());
-		Assertions.assertEquals("test3",condResult2.get(1).getId());
-		Assertions.assertEquals("test5",condResult2.get(2).getId());
+		Assertions.assertEquals("test5",condResult2.get(0).getId());
+		Assertions.assertEquals("test2",condResult2.get(1).getId());
+		Assertions.assertEquals("test3",condResult2.get(2).getId());
 		Assertions.assertEquals(1,res3.getNowPage());
 		Assertions.assertEquals(3,res3.getPageSize());
 		Assertions.assertEquals(3,res3.getTotalElements());
@@ -226,8 +228,8 @@ public class ReadApiTest extends BookApiTestBase{
 		url = domain + OpenApiConst.Path.BOOK_R_COND + queryString;
 		BookQueryRes res4 = mockReq.getForObject(url, BookQueryRes.class);
 		List<MyBook> condResult3 = res4.getResult();
-		Assertions.assertEquals("test3",condResult3.get(0).getId());
-		Assertions.assertEquals("test5",condResult3.get(1).getId());
+		Assertions.assertEquals("test5",condResult3.get(0).getId());
+		Assertions.assertEquals("test3",condResult3.get(1).getId());
 		Assertions.assertEquals(1,res4.getNowPage());
 		Assertions.assertEquals(3,res4.getPageSize());
 		Assertions.assertEquals(2,res4.getTotalElements());
@@ -237,8 +239,8 @@ public class ReadApiTest extends BookApiTestBase{
 		url = domain + OpenApiConst.Path.BOOK_R_COND + queryString;
 		BookQueryRes res5 = mockReq.getForObject(url, BookQueryRes.class);
 		List<MyBook> condResult4 = res5.getResult();
-		Assertions.assertEquals("test5",condResult4.get(0).getId());
-		Assertions.assertEquals("test3",condResult4.get(1).getId());
+		Assertions.assertEquals("test3",condResult4.get(0).getId());
+		Assertions.assertEquals("test5",condResult4.get(1).getId());
 		Assertions.assertEquals(1,res5.getNowPage());
 		Assertions.assertEquals(3,res5.getPageSize());
 		Assertions.assertEquals(2,res5.getTotalElements());
@@ -248,7 +250,7 @@ public class ReadApiTest extends BookApiTestBase{
 		url = domain + OpenApiConst.Path.BOOK_R_COND + queryString;
 		BookQueryRes res6 = mockReq.getForObject(url, BookQueryRes.class);
 		List<MyBook> condResult5 = res6.getResult();
-		Assertions.assertEquals("test1",condResult5.get(0).getId());
+		Assertions.assertEquals("test5",condResult5.get(0).getId());
 		Assertions.assertEquals("test2",condResult5.get(1).getId());
 		Assertions.assertEquals("test3",condResult5.get(2).getId());
 		Assertions.assertEquals(1,res6.getNowPage());

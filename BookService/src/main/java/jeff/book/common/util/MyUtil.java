@@ -49,14 +49,15 @@ public class MyUtil {
 	 * 建立分頁機制。</p>
 	 * 
 	 * @param orderBy - 排序的依據欄位
+	 * @param orderBy2 - 排序的依據欄位2，若無就傳null
 	 * @param sortRule - 排序要升冪還降冪
 	 * @param pageSize - 一頁幾筆資料
 	 * @param nowPage - 目前在第幾頁
 	 * */
-	public PageRequest genMyPaginationStrategy(String orderBy,String sortRule,
-			Integer pageSize,Integer nowPage) {
+	public PageRequest genMyPaginationStrategy(String orderBy, String orderBy2,
+			String sortRule, Integer pageSize,Integer nowPage) {
 		Sort sorting = 
-				genSortingStrategy(orderBy, sortRule);
+				genSortingStrategy(orderBy, orderBy2, sortRule);
 //		客戶端頁數從1開始算，JPA分頁的第一頁則是0。
 		return PageRequest.of(nowPage-1,pageSize,sorting);
 	}
@@ -64,17 +65,26 @@ public class MyUtil {
 	
 	/**
 	 * 若orderBy與sortRule都有東西，就回傳有排序規則的Sort物件；</p>
-	 * 若非，則回傳無排序規則的Sort物件。
+	 * 若非，則回傳無排序規則的Sort物件。</p>
+	 * 先以orderBy為第一個條件去排序，若抓出的數筆資料該欄位都相同，就再以orderBy2為條件
+	 * 去排序。
 	 * 
 	 * @throws Exception 若建置物件途中發生錯誤，則拋出。
+	 * @param orderBy 排序基準欄位一
+	 * @param orderBy2 排序基準欄位二，若無就傳null
+	 * @param sortRule 排序規則
 	 * */
-    private Sort genSortingStrategy(String orderBy, String sortRule) {
+    private Sort genSortingStrategy(String orderBy, String orderBy2, String sortRule) {
 //    	無排序規則的Sort物件
         Sort sort = Sort.unsorted();
         if (Objects.nonNull(orderBy) && Objects.nonNull(sortRule)) {
             Sort.Direction direction = Sort.Direction.fromString(sortRule);
-//         	有排序規則的Sort物件
-            sort = Sort.by(direction, orderBy);
+            if(orderBy2 == null) {
+            	sort = Sort.by(direction, orderBy);
+            }else {
+//         	有排序規則的Sort物件，orderBy可以傳入多項
+            	sort = Sort.by(direction, orderBy, orderBy2);
+            }
         }
         return sort;
     }

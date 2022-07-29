@@ -35,7 +35,8 @@ public class BookServiceImpl implements BookService{
 	public BookQueryRes getAllBooks(MyBookQueryParam param) {
 		myUtil.setDefaultValueForParam(param);
 		PageRequest paginationStrategy = 
-				myUtil.genMyPaginationStrategy(BookQueryConst.DEFAULT_ORDER_BY,
+				myUtil.genMyPaginationStrategy(
+					BookQueryConst.DEFAULT_ORDER_BY, BookQueryConst.DEFAULT_ORDER_BY2,
 						param.getSortRule(),param.getPageSize(),param.getNowPage());
 		Page<MyBook> pageResult = 
 				bookRepository.findAll(paginationStrategy);
@@ -55,8 +56,9 @@ public class BookServiceImpl implements BookService{
 	public BookQueryRes getBooksByCondition(MyBookQueryParam param) {
 		myUtil.setDefaultValueForParam(param);
 		PageRequest paginationStrategy = 
-				myUtil.genMyPaginationStrategy(BookQueryConst.DEFAULT_ORDER_BY,
-					param.getSortRule(),param.getPageSize(),param.getNowPage());
+				myUtil.genMyPaginationStrategy(
+					BookQueryConst.DEFAULT_ORDER_BY, BookQueryConst.DEFAULT_ORDER_BY2,
+						param.getSortRule(),param.getPageSize(),param.getNowPage());
 		Page<MyBook> pageResult = 
 				bookRepository.findByMainTitleContainingIgnoreCaseAndAcquiredYearBetween(
 						param.getTitleKw(), param.getYearFrom(),
