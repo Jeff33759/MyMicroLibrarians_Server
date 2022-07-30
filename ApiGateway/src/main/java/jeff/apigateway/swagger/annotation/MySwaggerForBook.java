@@ -245,7 +245,7 @@ public interface MySwaggerForBook {
     								description = "Number of the book-server in book-server-cluster."),
     								@Header(
     	    								name = "location",
-    	    								description = "URL of the created book, can access it to find this book.")},
+    	    								description = "The URL of the book that has been created, can access it to find this book.")},
     						content = @Content(
     								schema = @Schema(
     										implementation = BookResTmpl.class)))})
@@ -277,7 +277,10 @@ public interface MySwaggerForBook {
     						headers = {
     								@Header(
     										name = "server-name",
-    										description = "Number of the book-server in book-server-cluster.")},
+    										description = "Number of the book-server in book-server-cluster."),
+    								@Header(
+    	    								name = "location",
+    	    								description = "The URL of the book that has been replaced, can access it to find this book.")},
     						content = @Content(
     								schema = @Schema(
     										implementation = BookResTmpl.class)))})
@@ -318,7 +321,10 @@ public interface MySwaggerForBook {
     						headers = {
     								@Header(
     										name = "server-name",
-    										description = "Number of the book-server in book-server-cluster.")},
+    										description = "Number of the book-server in book-server-cluster."),
+    								@Header(
+    	    								name = "location",
+    	    								description = "The URL of the book that has been updated, can access it to find this book.")},
     						content = @Content(
     								schema = @Schema(
     										implementation = BookResTmpl.class)))})

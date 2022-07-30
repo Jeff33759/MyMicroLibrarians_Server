@@ -48,9 +48,10 @@ public class SecurityConfig {
 	* 所以放行該路徑，讓SpringBoot預設的{@link BasicErrorController}處理後續回應。</p>
 	* 
 	* http.cors()顯式設置允許的跨來源請求(否則預設禁止)，此舉會自動放行{@link #corsConfigurationSource}
-	* 所匹配路徑的OPTIONS請求(所以不用再另外設置antMatchers放行OPTIONS)，讓非簡單請求的預檢請求(preflight request)
-	* 不會被擋掉，並告知瀏覽器本伺服端支持該路徑的跨來源請求；當瀏覽器發出真正的請求時，本伺服端會為回應
-	* 都加上CORS所需的標頭(Access-Control-Allow-Origin:*)，讓WEB瀏覽器的JS可以取得所需的業務回應。
+	* 所匹配路徑的OPTIONS請求(所以不用再另外設置antMatchers放行OPTIONS)，讓非簡單請求(非GET、POST、HEAD)的
+	* 預檢請求(preflight request)不會被擋掉，並告知瀏覽器本伺服端支持該路徑的跨來源請求；
+	* 當瀏覽器發出真正的請求時，本伺服端會為回應都加上CORS所需的標頭(Access-Control-Allow-Origin:*)，
+	* 讓WEB瀏覽器的JS可以取得所需的業務回應。
 	*/
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

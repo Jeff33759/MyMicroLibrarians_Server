@@ -1,5 +1,6 @@
 package jeff.book2.integration;
 
+import java.net.URI;
 import java.util.Calendar;
 
 import org.junit.jupiter.api.Assertions;
@@ -37,8 +38,11 @@ public class UpdateApiTest extends BookApiTestBase{
 		ResponseEntity<MyBook> res = 
 				mockReq.exchange(url, HttpMethod.PUT, reqObj, MyBook.class);
 		String serverName = res.getHeaders().get("Server-Name").get(0);
+		URI location = res.getHeaders().getLocation();
 		MyBook replacedBook = res.getBody();
 		Assertions.assertEquals("BookService2",serverName);
+		Assertions.assertEquals("/book/byid/" + replacedBook.getId(), 
+				location.getRawPath());
 		Assertions.assertEquals(bookId, replacedBook.getId());
 		Assertions.assertEquals("測試",replacedBook.getMainTitle());
 		Assertions.assertEquals("test",replacedBook.getType());
@@ -180,8 +184,11 @@ public class UpdateApiTest extends BookApiTestBase{
 		ResponseEntity<MyBook> res = 
 				mockReq.exchange(url, HttpMethod.PATCH, reqObj, MyBook.class);
 		String serverName = res.getHeaders().get("Server-Name").get(0);
+		URI location = res.getHeaders().getLocation();
 		MyBook updatedBook = res.getBody();
 		Assertions.assertEquals("BookService2",serverName);
+		Assertions.assertEquals("/book/byid/" + updatedBook.getId(), 
+				location.getRawPath());
 //		以下檢查是否保留舊值
 		Assertions.assertEquals(bookId, updatedBook.getId());
 		Assertions.assertEquals("日本史1",updatedBook.getMainTitle());

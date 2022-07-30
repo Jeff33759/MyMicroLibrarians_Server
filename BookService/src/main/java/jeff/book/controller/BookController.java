@@ -108,7 +108,17 @@ public class BookController {
 			"'id' must not be null and must contain at least one non-whitespace character. ") 
 	@PathVariable("id") String bookId, @Valid @RequestBody MyBookReq reqBody){
 		MyBook beReplacedBook = bookService.replaceBook(reqBody,bookId);
-		return ResponseEntity.ok(beReplacedBook);
+//		若對location欄位的URL發Get請求，將可以得到創建後的新資料
+        URI location = ServletUriComponentsBuilder
+//        		.fromPath("/book")
+        		.fromCurrentRequest()
+        		.host(param.GATEWAY_IP)
+        		.port(param.GATEWAY_PORT)
+        		.replacePath("/book/byid/{id}")
+//              上面的{id}要填入啥
+                .buildAndExpand(beReplacedBook.getId())
+                .toUri();
+		return ResponseEntity.ok().location(location).body(beReplacedBook);
 	}
 	
 	
@@ -122,7 +132,17 @@ public class BookController {
 			"'id' must not be null and must contain at least one non-whitespace character. ") 
 	@PathVariable("id") String bookId, @Valid @RequestBody MyBookPatchReq reqBody){
 		MyBook beUpdatedBook = bookService.updateBook(reqBody, bookId);
-		return ResponseEntity.ok(beUpdatedBook);
+//		若對location欄位的URL發Get請求，將可以得到創建後的新資料
+        URI location = ServletUriComponentsBuilder
+//        		.fromPath("/book")
+        		.fromCurrentRequest()
+        		.host(param.GATEWAY_IP)
+        		.port(param.GATEWAY_PORT)
+        		.replacePath("/book/byid/{id}")
+//              上面的{id}要填入啥
+                .buildAndExpand(beUpdatedBook.getId())
+                .toUri();
+		return ResponseEntity.ok().location(location).body(beUpdatedBook);
 	}
 	
 	/**
