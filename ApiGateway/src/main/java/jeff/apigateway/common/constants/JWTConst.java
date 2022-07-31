@@ -29,7 +29,7 @@ public interface JWTConst {
     /**
      * RefreshToken時效(分鐘)
      * */
-    public static final int RT_EXP = 60;
+    public static final int RT_EXP = 3;
     
     /**
      * 使用RS256非對稱型加密，私鑰製作、公鑰解析。</p>
@@ -45,7 +45,7 @@ public interface JWTConst {
     /**
      * AccessToken時效(分鐘)
      * */
-    public static final int AT_EXP = 30;
+    public static final int AT_EXP = 2;
     
     /**
      * 指定密鑰字串，得到SecretKey實例，用於HS256。
