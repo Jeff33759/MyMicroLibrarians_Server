@@ -13,14 +13,36 @@
 ***＊＊＊＊＊＊＊＊＊＊＊＊＊我做到了什麼＊＊＊＊＊＊＊＊＊＊＊＊＊***
 
 1、RESTful Api，讓前後端分離的串接更加順利。
-2、捨棄基於Cookie的Session機制，改用JSON Web Token(JWT)來記錄使用者的狀態，方便微服務之間共享使用者的公開資訊。
-3、Refresh Token與Access Token的實作。
-4、Refresh Token Signature使用HS256對稱型加密，加密與解密都由同個伺服端負責；Access Token Signature使用RS256非對稱型加密，私鑰加密、公鑰解密，加密與解密分別由不同伺服端負責。
-5、使用AOP將Logging邏輯插入各業務邏輯中，紀錄所發生的例外，並將例外分級，以不同等級的Log紀錄。
-6、使用AOP將RESTful Api的錯誤回應處理邏輯插入控制器，根據控制器拋出的例外不同，將其處理成不同的Http狀態碼，回應給客戶端。
-7、使用RestTemplate實現各微服務間的溝通，以及與政府資料平台串接，下載DEMO用的館藏資料。
-8、使用Mockito實作單元測試，使用MockMvc實作整合測試(只有Book Server有整合測試)。
-9、
+
+2、gateway與各微服務間的交握、溝通，將所需的物件序列化及反序列化。
+
+3、捨棄基於Cookie的Session機制，改用JSON Web Token(JWT)來記錄使用者的狀態，方便微服務之間共享使用者的公開資訊。
+
+4、客製化Spring Security的認證機制，實作自製的基於帳密的認證以及基於Access Token的認證邏輯。
+
+5、實作Spring Security授權保護機制，基於角色(Role)的授權保護，讓某些API只有當該帳號具有某種角色才能夠訪問。
+
+6、針對CORS的處理，讓Web瀏覽器能夠將跨來源的資料使用於JS，實現前後端分離。
+
+7、針對各微服務Server的保護，讓各微服務的Server只接受來自getaway的請求。
+
+8、gateway以亂數實現負載均衡(參考ApiGateway > jeff.apigateway.common.util.LoadBalanceUtil)。
+
+9、Refresh Token與Access Token的實作。
+
+10、Refresh Token Signature使用HS256對稱型加密，加密與解密都由同個伺服端負責；Access Token Signature使用RS256非對稱型加密，私鑰加密、公鑰解密，加密與解密分別由不同伺服端負責。
+
+11、利用AOP將Logging邏輯從各業務邏輯中抽離出來，便於開發與維護。
+
+12、將Logging分級，針對可預期的例外按照嚴重程度區分，以不同等級的Log紀錄。
+
+13、使用RestTemplate實現各微服務間的溝通，以及與政府資料開放平台串接，下載DEMO用的館藏資料。
+
+14、使用Mockito實作單元測試，使用MockMvc實作整合測試(只有Book Server有整合測試)。
+
+15、使用MongoDB作為資料庫，並使用JPQL作為查詢語言，實現包含分頁查詢等等的基本CRUD功能。
+
+
 
 ![image](https://raw.githubusercontent.com/Jeff33759/MyMicroLibrarians_Server/master/System_Architecture_Diagram.jpg
 )
