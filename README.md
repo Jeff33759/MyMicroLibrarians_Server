@@ -2,6 +2,7 @@
 分散式架構實作館藏系統
 
 
+
 ***＊＊＊＊＊＊＊＊＊＊＊＊＊專題大綱＊＊＊＊＊＊＊＊＊＊＊＊＊***
 
 市面上虛擬主機的發展已臻成熟，隨著雲端的使用愈趨普遍，加上前後端分離的趨勢，分散式的系統架構逐漸受到歡迎。
@@ -9,6 +10,7 @@
 有別於傳統的主從式架構，分散式架構除了可以幫助人們採用更加彈性的雲端部屬方案外，也有著更高的容錯性，缺點就是管理與開發要來得更加複雜。
 
 本專題利用Spring Boot實作了分散式系統的模型，希望在學習使用Spring Cloud之前，能夠藉由實作本專題，更加了解分散式系統的運行機制。
+
 
 ***＊＊＊＊＊＊＊＊＊＊＊＊＊我做到了什麼＊＊＊＊＊＊＊＊＊＊＊＊＊***
 
@@ -43,6 +45,7 @@
 15、使用MongoDB作為資料庫，並使用JPQL作為查詢語言，實現包含分頁查詢等等的基本CRUD功能。
 
 
+
 ***＊＊＊＊＊＊＊＊＊＊＊＊＊環境(各Server都一樣)＊＊＊＊＊＊＊＊＊＊＊＊＊***
 
 開發與運行環境 : 至少要JDK17
@@ -59,7 +62,9 @@ Book-Service : 8082
 Book-Service2 : 8084
 MongoDB : 27017
 
-***＊＊＊＊＊＊＊＊＊＊＊＊＊DEMO前的建置＊＊＊＊＊＊＊＊＊＊＊＊＊***
+
+
+***＊＊＊＊＊＊＊＊＊＊＊＊＊事前建置與DEMO說明＊＊＊＊＊＊＊＊＊＊＊＊＊***
 
 1、安裝MongoDB(版本至少為5.0.5)，確保MongoDB運行於預設的PORT-27017。
 
@@ -69,11 +74,19 @@ MongoDB : 27017
 
 安裝MongoDB後，不用再做任何建置，程式啟動後會自行建立DB以及Collection，並且寫入DEMO用資料。
 
+查看Swagger API文件的網址:
+http://localhost:8080/api-docs
+
+因為ApiGateway強依賴於Authentication-Service與Authorization-Service兩個微服務，所以必須等到那兩個微服務都啟動了，並且向ApiGateway完成交握註冊，那麼ApiGateway才會提供對外服務(包括Swagger API文件)。
+
+
 
 ***＊＊＊＊＊＊＊＊＊＊＊＊＊系統架構示意圖＊＊＊＊＊＊＊＊＊＊＊＊＊***
 
 ![image](https://raw.githubusercontent.com/Jeff33759/MyMicroLibrarians_Server/master/System_Architecture_Diagram.jpg
 )
+
+
 
 ***＊＊＊＊＊＊＊＊＊＊＊＊＊各微服務功能大致說明＊＊＊＊＊＊＊＊＊＊＊＊＊***
 
