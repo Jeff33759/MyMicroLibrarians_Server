@@ -42,7 +42,7 @@
 
 15、使用MongoDB作為資料庫，並使用JPQL作為查詢語言，實現包含分頁查詢等等的基本CRUD功能。
 
-
+16、使用Swagger套件，撰寫API文件
 
 ![image](https://raw.githubusercontent.com/Jeff33759/MyMicroLibrarians_Server/master/System_Architecture_Diagram.jpg
 )
