@@ -28,18 +28,53 @@
 
 8、針對CORS的處理，讓Web瀏覽器能夠將跨來源的資料使用於JS，實現前後端分離。
 
-9、gateway以亂數實現負載平衡(參考ApiGateway > jeff.apigateway.common.util.LoadBalanceUtil)。
+9、gateway與各微服務實例之間，以Http協議實現交握，並以定時任務建立心跳機制，確認彼此是否還活著。
 
-10、利用AOP將Logging邏輯從各業務邏輯程式碼中抽離出來，便於開發與維護。
+10、gateway以亂數實現負載平衡(參考ApiGateway > jeff.apigateway.common.util.LoadBalanceUtil)。
 
-11、將Logging分級，針對可預期的例外按照嚴重程度區分，以不同等級的Log紀錄。
+11、利用AOP將Logging邏輯從各業務邏輯程式碼中抽離出來，便於開發與維護。
 
-12、使用RestTemplate實現各微服務間的溝通，以及與政府資料開放平台串接，下載DEMO用的館藏資料。
+12、將Logging分級，針對可預期的例外按照嚴重程度區分，以不同等級的Log紀錄。
 
-13、使用Mockito實作單元測試，使用MockMvc實作整合測試(只有Book Server有整合測試)。
+13、使用RestTemplate實現各微服務間的溝通，以及與政府資料開放平台串接，下載DEMO用的館藏資料。
 
-14、使用MongoDB作為資料庫，並使用JPQL作為查詢語言，實現包含分頁查詢等等的基本CRUD功能。
+14、使用Mockito實作單元測試，使用MockMvc實作整合測試(只有Book Server有整合測試)。
 
+15、使用MongoDB作為資料庫，並使用JPQL作為查詢語言，實現包含分頁查詢等等的基本CRUD功能。
+
+
+***＊＊＊＊＊＊＊＊＊＊＊＊＊環境(各Server都一樣)＊＊＊＊＊＊＊＊＊＊＊＊＊***
+
+開發與運行環境 : 至少要JDK17
+
+資料庫 : Mongo DB 5.0.5
+
+Spring Boot版本 : 2.7.0
+  
+預設使用PORT : 
+ApiGateway : 8080
+Authrntication-Service : 8081
+Authorization-Service : 8083
+Book-Service : 8082
+Book-Service2 : 8084
+MongoDB : 27017
+
+***＊＊＊＊＊＊＊＊＊＊＊＊＊DEMO前的建置＊＊＊＊＊＊＊＊＊＊＊＊＊***
+
+1、安裝MongoDB(版本至少為5.0.5)，確保MongoDB運行於預設的PORT-27017。
+
+2、確保執行環境為JRE17以上(各微服務Server都是)。
+
+3、啟動ApiGateway、Authrntication-Service、Authorization-Service、Book-Service、Book-Service2，順序不拘，會自己完成交握。
+
+安裝MongoDB後，不用再做任何建置，程式啟動後會自行建立DB以及Collection，並且寫入DEMO用資料。
+
+
+***＊＊＊＊＊＊＊＊＊＊＊＊＊系統架構示意圖＊＊＊＊＊＊＊＊＊＊＊＊＊***
 
 ![image](https://raw.githubusercontent.com/Jeff33759/MyMicroLibrarians_Server/master/System_Architecture_Diagram.jpg
 )
+
+***＊＊＊＊＊＊＊＊＊＊＊＊＊各微服務功能大致說明＊＊＊＊＊＊＊＊＊＊＊＊＊***
+
+ApiGateway : 
