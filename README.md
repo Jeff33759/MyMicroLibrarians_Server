@@ -17,7 +17,7 @@
 
 2. 使用Swagger套件，撰寫API文件
 
-3. 捨棄基於Cookie的Session機制，改用JSON Web Token(JWT)來記錄使用者的狀態，方便微服務之間共享使用者的公開資訊。
+3. 捨棄基於Cookie的Session機制，改用JSON Web Token(JWT)來記錄使用者的狀態，方便不同伺服端之間共享使用者的公開資訊。
 
 4. 客製化Spring Security的認證機制，實作自製的基於帳密的認證或是基於Token的認證邏輯。
 
