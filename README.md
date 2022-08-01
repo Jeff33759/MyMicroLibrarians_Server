@@ -6,7 +6,7 @@
 
 市面上虛擬主機的發展已臻成熟，隨著雲端的使用愈趨普遍，加上前後端分離的趨勢，分散式的系統架構逐漸受到歡迎。
 
-有別於傳統的主從式架構，分散式架構除了可以幫助人們採用更加彈性的雲端部屬方案外，也有著更高的容錯性，缺點就是管理與開發要來得更加複雜。
+有別於傳統的主從式架構，分散式架構除了可以幫助人們採用更加彈性的雲端部屬方案外，也有著更高的系統容錯性，缺點就是管理與開發要來得更加複雜。
 
 本專題利用Spring Boot實作了分散式系統的模型，希望在學習使用Spring Cloud之前，能夠藉由實作本專題，更加了解分散式系統的運行機制。
 
@@ -25,23 +25,25 @@
 
 6. Refresh Token Signature使用HS256對稱型加密，加密與解密都由同個伺服端負責；Access Token Signature使用RS256非對稱型加密，私鑰加密、公鑰解密，加密與解密分別由不同伺服端負責。
 
-7. 實作Spring Security授權保護機制，設定基於角色(Role)的授權保護，讓受保護的API只有某種角色才能夠訪問。
+7. 實作Spring Security授權保護機制，設定基於角色(Role)的授權保護，保護一些只有特定角色才能訪問的API。
 
-8. 針對CORS的處理，讓Web瀏覽器能夠將跨來源的資料使用於JS，實現前後端分離。
+8. 使用Spring Security提供的BCrypt，將密碼以加密後，以暗文型式存放於DB，以免私密資料洩漏。
 
-9. gateway與各微服務實例之間，以Http協議實現交握註冊，並以定時任務建立心跳機制，確認彼此是否還活著。
+9. 針對CORS的處理，讓Web瀏覽器能夠將跨來源的資料使用於JS，實現前後端分離。
 
-10. gateway以亂數實現負載平衡(參考ApiGateway > jeff.apigateway.common.util.LoadBalanceUtil)。
+10. gateway與各微服務實例之間，以Http協議實現交握註冊，並以定時任務建立心跳機制，確認彼此是否還活著。
 
-11. 利用AOP將Logging邏輯從各業務邏輯程式碼中抽離出來，便於開發與維護。
+11. gateway以亂數實現負載平衡(參考ApiGateway > jeff.apigateway.common.util.LoadBalanceUtil)。
 
-12. 將Logging分級，針對可預期的例外按照嚴重程度區分，以不同等級的Log紀錄。
+12. 利用AOP將Logging邏輯從各業務邏輯程式碼中抽離出來，便於開發與維護。
 
-13. 使用RestTemplate實現各微服務間的溝通，以及與政府資料開放平台串接，下載DEMO用的館藏資料。
+13. 將Logging分級，針對可預期的例外按照嚴重程度區分，以不同等級的Log紀錄。
 
-14. 使用Mockito實作單元測試，使用MockMvc實作整合測試(只有Book Server有整合測試)。
+14. 使用RestTemplate實現各微服務間的溝通，以及與政府資料開放平台串接，下載DEMO用的館藏資料。
 
-15. 使用MongoDB作為資料庫，並使用JPQL作為查詢語言，實現包含分頁查詢等等的基本CRUD功能。
+15. 使用Mockito實作單元測試，使用MockMvc實作整合測試(只有Book Server有整合測試)。
+
+16. 使用MongoDB作為資料庫，並使用JPQL作為查詢語言，實現包含分頁查詢等等的基本CRUD功能。
 
 <br><br>
 ## 環境(各Server都一樣)
@@ -87,6 +89,15 @@ MongoDB : 27017
 
 因為ApiGateway強依賴於Authentication-Service與Authorization-Service兩個微服務，所以必須等到那兩個微服務都啟動了，並且向ApiGateway完成交握註冊，那麼ApiGateway才會提供對外服務(包括Swagger API文件)。
 
+***本系統提供的三種身份:***
+
+1. ADMIN(帳密皆為"admin") - 為最高權限，可以使用所有API
+
+2. ADVANCED(帳密皆為"advanced") - 進階權限，可以使用館藏的CRUD
+
+3. normal(帳密皆為"normal") - 一般權限，可以使用館藏的進階R
+
+
 ***測試Load-Balance注意事項:***
 
 確保Book-Service與Book-Service2都成功啟動並向gateway完成註冊，接著對Book相關API隨便連打請求，會看到回應的標頭有個「server-name」欄位的值隨機變化，有時是Book-Service，有時是Book-Service2。
@@ -108,7 +119,7 @@ _注意 : 若只啟動其中一個Book-Service，那Load-Balance機制就不會�
 
 所有JWT所需的密鑰，都由Gateway啟動時統一生成並保管，然後等到所需的微服務向Gateway成功註冊後，Gateway會將密鑰序列化後傳給該微服務，該微服務再將其反序列化回密鑰物件，用以製作或解析JWT。
 
-***對外提供的API:***
+***對外開放的API:***
 
 1. 查看各微服務的狀態(GET) - 能夠查看所有ApiGate已知的微服務的服務狀態，例如實例A是否完成註冊並在服務中。
 
@@ -120,7 +131,7 @@ _詳情說明，洽Swagger API文件_
 
 當AuthN啟動後，會先於MongoDB建置會員相關資料(三個分別代表不同權限的DEMO用資料)，接著會向Gateway註冊，並且要到Refresh Token的密鑰(加密與解密共用)，以及Access Token的私鑰(只用於加密)，以及其他例如EXP等等用以製作JWT所需的相關規格。
 
-***對外提供的API:***
+***對外開放的API:***
 
 1. 帳密登入(POST) - 客戶端提供帳號密碼，由AuthN認證，若認證通過，就回傳RefreshToken以及AccessToken。
 
@@ -144,7 +155,7 @@ _詳情說明，洽Swagger API文件_
 
 當Book啟動後，會先於MongoDB建置館藏相關DEMO資料(資料來源於 [政府資料開放平台](https://data.gov.tw/dataset/8727) )，接著會向Gateway註冊。
 
-***對外提供的API:***
+***對外開放的API:***
 
 1. 查詢所有書籍(GET)
 
