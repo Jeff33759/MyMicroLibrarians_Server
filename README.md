@@ -181,7 +181,9 @@ RestTemplate雖為執行緒安全，但卻是同步阻塞的，沒有得到回�
 
 4. _基於Token的有狀態請求，可以改用redis實現Session共享_
 
-一般使用JWT替代Session，是因為傳統基於Cookie的Session機制，並不能實現跨伺服端的Session共享；但現在有人使用redis實現Session的跨伺服端共享，個人理解為把儲存Session的功能再獨立出來一個伺服端做，然後該伺服端資料庫用速度較快的redis。前端部分，將不再使用Cookie了，而是將Cookie中的SessionId儲存在localStorage中，每次發送請求都夾帶於標頭上(類似於Token做法)，假設後端A接收到SessionId，就會拿SessionId去跟redis伺服端撈Session資料，當然後端B也能拿SessionId去跟redis伺服端撈Session資料，兩個後端Server取出的都是同一個Session，也就實現了跨伺服端的Session共享。
+一般使用JWT替代Session，是因為傳統基於Cookie的Session機制，並不能實現跨伺服端的Session共享；但現在有人使用redis實現Session的跨伺服端Session共享。
+
+個人理解為把儲存Session的功能，再獨立拉出來一個伺服端做，一個Session可以對應多個SessionId(讓前端可以多裝置共享Session)，然後該Session Server的DB使用速度較快的redis。前端請求時，將不再使用Cookie了，而是將Cookie中的SessionId儲存在localStorage中，每次發送請求都夾帶於標頭上(類似於Token做法)，假設伺服端實例A接收到SessionId，就會拿SessionId去跟Session Server要Session資料，當然伺服端實例B也能拿SessionId去跟Session Server要Session資料，兩個伺服端實例取出的都是同一個Session，也就實現了跨伺服端的Session共享。
 
 **使用JWT有以下缺點:**
 
@@ -193,5 +195,5 @@ JWT為了記錄狀態，必須把很多資料包進Token(特別是AccessToken)�
 
 JWT發放出去之後，不能透過ServerSide讓Token失效，必須等到exp時間過才會失去效用
 
-有狀態的服務改回Session Based後，將不會有上述缺點，效能還比較好，且訪間流傳的關於Token Based的三大優點「跨來源、CSRF安全、跨伺服端」...其實Session Based也都可以配合前端去做到，那並不算是Token Based獨有的優點。
+有狀態的服務改回Session Based後，將不會有上述缺點，效能還比較好，且訪間流傳的關於Token Based的幾大優點「跨來源、CSRF安全、跨裝置」...其實Session Based也都可以做到，那並不算是Token Based獨有的優點。
 
