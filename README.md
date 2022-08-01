@@ -106,7 +106,7 @@ _注意 : 若只啟動其中一個Book-Service，那Load-Balance機制就不會�
 
 各微服務的監控(註冊與心跳機制)、JWT規格管理與派發、load balance轉發請求、訪問授權管制、Swagger API文件等等。
 
-所有JWT所需的密鑰，都由Gateway啟動時統一生成並保管，然後等到所需的微服務向Gateway成功註冊後，Gateway會將所需的密鑰序列化後傳給該微服務使用。
+所有JWT所需的密鑰，都由Gateway啟動時統一生成並保管，然後等到所需的微服務向Gateway成功註冊後，Gateway會將密鑰序列化後傳給該微服務，該微服務再將其反序列化回密鑰物件，用以製作或解析JWT。
 
 ***對外提供的API:***
 
@@ -133,7 +133,7 @@ _詳情說明，洽Swagger API文件_
 
 專門解析Access Token。
 
-當AuthZ啟動後，會向Gateway註冊，並且要到Access Token的公鑰，用以解析JWT。
+當AuthZ啟動後，會向Gateway註冊，要到Access Token的公鑰，用以解析JWT。
 
 ***本服務端沒有對外開放的API***
 
