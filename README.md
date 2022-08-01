@@ -95,8 +95,9 @@ MongoDB : 27017
 
 2. ADVANCED(帳密皆為"advanced") - 進階權限，可以使用館藏的CRUD
 
-3. normal(帳密皆為"normal") - 一般權限，可以使用館藏的進階R
+3. NORMAL(帳密皆為"normal") - 一般權限，可以使用館藏的進階R
 
+4. 未登入 - 只能使用館藏的一般R
 
 ***測試Load-Balance注意事項:***
 
