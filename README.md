@@ -102,7 +102,7 @@ _注意 : 若只啟動其中一個Book-Service，那Load-Balance機制就不會�
 <br><br>
 ## 各微服務功能大致說明
 
-#### [ApiGateway] 
+### [ApiGateway] 
 
 各微服務的監控(註冊與心跳機制)、JWT規格管理與派發、load balance轉發請求、訪問授權管制、Swagger API文件等等。
 
@@ -114,7 +114,7 @@ _注意 : 若只啟動其中一個Book-Service，那Load-Balance機制就不會�
 
 _詳情說明，洽Swagger API文件_
 
-#### [Authentication-Service(簡稱AuthN)]
+### [Authentication-Service(簡稱AuthN)]
 
 帳密認證、生成Refresh Token與Access Token。
 
@@ -129,7 +129,7 @@ _詳情說明，洽Swagger API文件_
 _詳情說明，洽Swagger API文件_
 
 
-#### [Authorization-Service(簡稱AuthZ)]
+### [Authorization-Service(簡稱AuthZ)]
 
 專門解析Access Token。
 
@@ -138,13 +138,13 @@ _詳情說明，洽Swagger API文件_
 ***本服務端沒有對外開放的API***
 
 
-#### [Book-Service]
+### [Book-Service]
 
 館藏相關的CRUD服務。
 
 當Book啟動後，會先於MongoDB建置館藏相關DEMO資料(資料來源於 [政府資料開放平台](https://data.gov.tw/dataset/8727) )，接著會向Gateway註冊。
 
-****對外提供的API:****
+***對外提供的API:***
 
 1. 查詢所有書籍(GET)
 
@@ -166,24 +166,24 @@ _詳情說明，洽Swagger API文件_
 <br><br>
 ## 可以改進的地方
 
-**1. RestTemplate即將被棄用，可以改用WebClient取代**
+1. _RestTemplate即將被棄用，可以改用WebClient取代_
 
 RestTemplate雖為執行緒安全，但卻是同步阻塞的，沒有得到回應前不會執行下一行，然後該執行緒就這樣卡住，而Servlet容器會為每個請求都分配一個執行緒，直到該APP的執行緒到達上限後就爆掉，所以要設定超時、釋放資源；在不久後的將來RestTemplate會被SpringBoot官方推薦的WebClient取代，其為非同步不阻塞元件，還沒得到回應的話，該執行緒會先去執行別的任務(例如處理別的請求)，等到有回應了，看有沒有其他執行緒來接手繼續這個任務(此知識點尚未深入研究，以上為現階段粗淺理解)。
 
-**2. 分散式系統比較關鍵的跨DB跨伺服端的RollBack沒有做到**
+2. _分散式系統比較關鍵的跨DB跨伺服端的RollBack沒有做到_
 
 如果要做，可以做在「館藏的借出與歸還」之功能上，但因為Spring Cloud似乎會幫忙完成此事，可以不用自己去撰寫RollBack相關邏輯，所以也許之後直接學Spring Cloud就好。
 
-**3. 各微服務的註冊與監控可以改用WebSocket**
+3. _各微服務的註冊與監控可以改用WebSocket_
 
-目前各微服務實例向Gateway的註冊，都是採用基於Http協議的請求建立，並且以定時任務的方式發送心跳機制，告知自己還活著。各微服務每5秒會發送一次心跳，Gateway每10秒會掃描一次各微服務有沒有發來至少一次心跳，藉此監控微服務的狀態，但這麼做會有空窗期，假設某微服務突然關閉了，那麼Gateway要知道這件事情，得等到10秒以後觸發定時任務，再度掃描一次微服務狀態，才會知道哪些微服務已經關閉；若改用WebSocket實作微服務的交握註冊，就能夠更即時地監測到各微服務的狀態，只是也許更耗資源。
+目前各微服務實例向Gateway的註冊，都是採用基於Http協議的請求，並且以定時任務的方式發送心跳機制，告知自己還活著。各微服務每5秒會發送一次心跳，Gateway每10秒會掃描一次各微服務有沒有發來至少一次心跳，藉此監控微服務的狀態，但這麼做會有空窗期，假設某微服務突然關閉了，那麼Gateway要知道這件事情，得等到10秒以後觸發定時任務，再度掃描一次微服務狀態，才會知道哪些微服務已經關閉；若改用WebSocket實作微服務的交握註冊，就能夠更即時地監測到各微服務的狀態，只是也許更耗資源。
 
 
-**4. 基於Token的有狀態請求，可以改用redis實現Session共享**
+4. _基於Token的有狀態請求，可以改用redis實現Session共享_
 
 一般使用JWT替代Session，是因為傳統基於Cookie的Session機制，並不能實現跨伺服端的Session共享；但現在有人使用redis實現Session的跨伺服端共享，個人理解為把儲存Session的功能再獨立出來一個伺服端做，然後該伺服端資料庫用速度較快的redis。前端部分，將不再使用Cookie了，而是將Cookie中的SessionId儲存在localStorage中，每次發送請求都夾帶於標頭上(類似於Token做法)，假設後端A接收到SessionId，就會拿SessionId去跟redis伺服端撈Session資料，當然後端B也能拿SessionId去跟redis伺服端撈Session資料，兩個後端Server取出的都是同一個Session，也就實現了跨伺服端的Session共享。
 
-使用JWT有以下缺點:
+**使用JWT有以下缺點:**
 
 * 空間以及長度問題
 
