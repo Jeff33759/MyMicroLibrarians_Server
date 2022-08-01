@@ -29,7 +29,7 @@
 
 8. 針對CORS的處理，讓Web瀏覽器能夠將跨來源的資料使用於JS，實現前後端分離。
 
-9. gateway與各微服務實例之間，以Http協議實現交握，並以定時任務建立心跳機制，確認彼此是否還活著。
+9. gateway與各微服務實例之間，以Http協議實現交握註冊，並以定時任務建立心跳機制，確認彼此是否還活著。
 
 10. gateway以亂數實現負載平衡(參考ApiGateway > jeff.apigateway.common.util.LoadBalanceUtil)。
 
@@ -53,7 +53,8 @@
 Spring Boot版本 : 2.7.0
 
 <br>
-***[預設使用PORT]***
+
+#### [預設使用PORT]
 
 ApiGateway : 8080
 
@@ -70,27 +71,27 @@ MongoDB : 27017
 <br><br>
 ## 事前建置與DEMO說明
 
-***[事前建置] : ***
+#### [事前建置]
 
-1、安裝MongoDB(版本至少為5.0.5)，確保MongoDB運行於預設的PORT-27017。
+1. 安裝MongoDB(版本至少為5.0.5)，確保MongoDB運行於預設的PORT-27017。
 
-2、確保執行環境為JRE-17以上(各微服務Server都是)。
+2. 確保執行環境為JRE-17以上(各微服務Server都是)。
 
-3、啟動ApiGateway、Authrntication-Service、Authorization-Service、Book-Service、Book-Service2，啟動順序不拘，系統會自己完成交握。
+3. 啟動各Server，啟動順序不拘，系統會自己完成交握。
 
 安裝MongoDB後，不用再做任何建置，程式啟動後會自行建立DB以及Collection，並且寫入DEMO用資料。
 
-***[查看Swagger API文件的路徑] : ***
+#### [DEMO說明]
 
-http://localhost:8080/api-docs
+***查看Swagger API文件的路徑:*** http://localhost:8080/api-docs
 
 因為ApiGateway強依賴於Authentication-Service與Authorization-Service兩個微服務，所以必須等到那兩個微服務都啟動了，並且向ApiGateway完成交握註冊，那麼ApiGateway才會提供對外服務(包括Swagger API文件)。
 
-***[測試Load-Balance注意事項] : ***
+***測試Load-Balance注意事項:***
 
 確保Book-Service與Book-Service2都成功啟動並向gateway完成註冊，接著對Book相關API隨便連打請求，會看到回應的標頭有個「server-name」欄位的值隨機變化，有時是Book-Service，有時是Book-Service2。
 
-注意 : 若只啟動其中一個Book-Service，那Load-Balance機制就不會啟動。
+_注意 : 若只啟動其中一個Book-Service，那Load-Balance機制就不會啟動_
 
 <br><br>
 ## 系統架構示意圖
@@ -101,62 +102,62 @@ http://localhost:8080/api-docs
 <br><br>
 ## 各微服務功能大致說明
 
-[ApiGateway] : 
+#### [ApiGateway] 
 
 各微服務的監控(註冊與心跳機制)、JWT規格管理與派發、load balance轉發請求、訪問授權管制、Swagger API文件等等。
 
 所有JWT所需的密鑰，都由Gateway啟動時統一生成並保管，然後等到所需的微服務向Gateway成功註冊後，Gateway會將所需的密鑰序列化後傳給該微服務使用。
 
-對外提供的API : 
+***對外提供的API:***
 
-1、查看各微服務的狀態
+1. 查看各微服務的狀態(GET) - 能夠查看所有ApiGate已知的微服務的服務狀態，例如實例A是否完成註冊並在服務中。
 
-詳情說明，洽Swagger API文件。
+_詳情說明，洽Swagger API文件_
 
-[Authentication-Service(簡稱AuthN)] : 
+#### [Authentication-Service(簡稱AuthN)]
 
 帳密認證、生成Refresh Token與Access Token。
 
 當AuthN啟動後，會先於MongoDB建置會員相關資料(三個分別代表不同權限的DEMO用資料)，接著會向Gateway註冊，並且要到Refresh Token的密鑰(加密與解密共用)，以及Access Token的私鑰(只用於加密)，以及其他例如EXP等等用以製作JWT所需的相關規格。
 
-對外提供的API:
+***對外提供的API:***
 
-1、帳密登入 - 客戶端提供帳號密碼，由AuthN認證，若認證通過，就回傳RefreshToken以及AccessToken。
+1. 帳密登入(POST) - 客戶端提供帳號密碼，由AuthN認證，若認證通過，就回傳RefreshToken以及AccessToken。
 
-2、刷新AccessToken - 客戶端提供RefreshToken，由AuthN進行解析，若解析正確，就回傳新的AccessToken。
+2. 刷新AccessToken(POST) - 客戶端提供RefreshToken，由AuthN進行解析，若解析正確，就回傳新的AccessToken。
 
-詳情說明，洽Swagger API文件。
+_詳情說明，洽Swagger API文件_
 
 
-[Authorization-Service(簡稱AuthZ)] : 
+#### [Authorization-Service(簡稱AuthZ)]
 
 專門解析Access Token。
 
 當AuthZ啟動後，會向Gateway註冊，並且要到Access Token的公鑰，用以解析JWT。
 
-本服務端沒有對外開放的API。
+***本服務端沒有對外開放的API***
 
 
-[Book-Service] : 
+#### [Book-Service]
 
 館藏相關的CRUD服務。
 
 當Book啟動後，會先於MongoDB建置館藏相關DEMO資料(資料來源於政府資料開放平台)，接著會向Gateway註冊。
 
-對外提供的API:
+****對外提供的API:****
 
-1、查詢所有書籍(GET)
+1. 查詢所有書籍(GET)
 
-2、以ID查詢某本書即(GET)
+2. 以ID查詢某本書即(GET)
 
-3、以複合條件查詢所有書籍(GET)
+3. 以複合條件查詢所有書籍(GET)
 
-4、新增一本書(POST)
+4. 新增一本書(POST)
 
-5、取代一本書(PUT)
+5. 取代一本書(PUT)
 
-6、部分更新一本書(PATCH)
+6. 部分更新一本書(PATCH)
 
-7、刪除一本書(DELETE)
+7. 刪除一本書(DELETE)
 
-詳情說明，洽Swagger API文件。
+_詳情說明，洽Swagger API文件_
