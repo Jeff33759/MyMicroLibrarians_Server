@@ -34,47 +34,49 @@ public class ManagementServiceImpl implements ManagementService{
 	 * 生成Book微服務相關的監聽數據，並將其設置入回應物件。
 	 * */
 	private void genBookServiceDataAndSetItIntoRes(MonitorRes res) {
-		MonitorRes.ServerInstance bookServer1 = res.new ServerInstance();
-		bookServer1.setName("BookServer1");
-		bookServer1.setEnabled(bookParam.IN_SERVICE);
-		MonitorRes.ServerInstance bookServer2 = res.new ServerInstance();
-		bookServer2.setName("BookServer2");
-		bookServer2.setEnabled(book2Param.IN_SERVICE);
+		MonitorRes.ServiceInstance bookInstance1 = res.new ServiceInstance();
+		bookInstance1.setName("BookServer");
+		bookInstance1.setEnabled(bookParam.IN_SERVICE);
+		MonitorRes.ServiceInstance bookInstance2 = res.new ServiceInstance();
+		bookInstance2.setName("BookServer2");
+		bookInstance2.setEnabled(book2Param.IN_SERVICE);
 		
-		List<MonitorRes.ServerInstance> bookServerList = 
-				new ArrayList<MonitorRes.ServerInstance>();
-		bookServerList.add(bookServer1);
-		bookServerList.add(bookServer2);
+		List<MonitorRes.ServiceInstance> bookInstanceList = 
+				new ArrayList<MonitorRes.ServiceInstance>();
+		bookInstanceList.add(bookInstance1);
+		bookInstanceList.add(bookInstance2);
 		
-		MonitorRes.MicroServiceStatus bookCluster = 
-				res.new MicroServiceStatus();
-		bookCluster.setInService(
-				bookServerList.stream().anyMatch(
+		MonitorRes.MicroService bookService = 
+				res.new MicroService();
+		bookService.setName("Book-Service");
+		bookService.setInService(
+				bookInstanceList.stream().anyMatch(
 						book->book.isEnabled()));
-		bookCluster.setCluster(bookServerList);
+		bookService.setCluster(bookInstanceList);
 		
-		res.setBookService(bookCluster);
+		res.getServiceList().add(bookService);
 	}
 	
 	/**
 	 * 生成authN微服務相關的監聽數據，並將其設置入回應物件。
 	 * */
 	private void genauthNServiceDataAndSetItIntoRes(MonitorRes res) {
-		MonitorRes.ServerInstance authNServer1 = res.new ServerInstance();
-		authNServer1.setName("AuthNServer1");
-		authNServer1.setEnabled(authNParam.IN_SERVICE);
+		MonitorRes.ServiceInstance authNInstance1 = res.new ServiceInstance();
+		authNInstance1.setName("AuthNServer");
+		authNInstance1.setEnabled(authNParam.IN_SERVICE);
 		
-		List<MonitorRes.ServerInstance> authNServerList = 
-				new ArrayList<MonitorRes.ServerInstance>();
-		authNServerList.add(authNServer1);
+		List<MonitorRes.ServiceInstance> authNInstanceList = 
+				new ArrayList<MonitorRes.ServiceInstance>();
+		authNInstanceList.add(authNInstance1);
 		
-		MonitorRes.MicroServiceStatus authNCluster = res.new MicroServiceStatus();
-		authNCluster.setInService(
-				authNServerList.stream().anyMatch(
+		MonitorRes.MicroService authNService = res.new MicroService();
+		authNService.setName("AuthN-Service");
+		authNService.setInService(
+				authNInstanceList.stream().anyMatch(
 						authN->authN.isEnabled()));
-		authNCluster.setCluster(authNServerList);
+		authNService.setCluster(authNInstanceList);
 		
-		res.setAuthNService(authNCluster);
+		res.getServiceList().add(authNService);
 	}
 
 }

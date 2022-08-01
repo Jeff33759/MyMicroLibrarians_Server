@@ -5,6 +5,7 @@ import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jeff.apigateway.model.dto.send.MonitorRes;
 
+
 /**
  * 顯示各微服務狀態的說明模板，因為不想把Schema寫在{@link MonitorRes}
  * 所以又創了一個模板。
@@ -13,27 +14,30 @@ import jeff.apigateway.model.dto.send.MonitorRes;
  * */
 public class MonitorResTmpl {
 	
-	public MicroServiceStatus authNService;
+	@Schema(description = "Micro-service list.")
+	public List<MicroService> serviceList;
 	
-	public MicroServiceStatus bookService;
-
-	
-	public class MicroServiceStatus {
+	public class MicroService {
 		
-		@Schema(description = "Whether the micro-service provides external services.",
+		@Schema(description = "Micro-service name.",
+				example = "Book-service")
+		public String name;
+
+		@Schema(description = "Whether the micro-service provides external services. " 
+				+ "True only if there is at least one instance enabled in the cluster.",
 				example = "true")
 		public boolean inService;
 
 		@Schema(description = "Micro-services-cluster.")
-		public List<ServerInstance> cluster;
-
+		public List<ServiceInstance> cluster;
+		
 	}
 	
-	
-	public class ServerInstance {
+
+	public class ServiceInstance {
 		
 		@Schema(description = "Server instance name.",
-				example = "Server1")
+				example = "bookServer1")
 		public String name;
 		
 		@Schema(description = "Server instance enabled status.",

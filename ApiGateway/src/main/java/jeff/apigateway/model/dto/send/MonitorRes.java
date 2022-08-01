@@ -1,5 +1,6 @@
 package jeff.apigateway.model.dto.send;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jeff.apigateway.controller.management.ManagementController;
@@ -12,49 +13,45 @@ import jeff.apigateway.controller.management.ManagementController;
 public class MonitorRes {
 	
 	/**
-	 * authN的微服務
+	 * 對外公開的微服務的列表。
 	 * */
-	private MicroServiceStatus authNService;
+	private List<MicroService> serviceList = 
+			new ArrayList<MicroService>();
+
+	public List<MicroService> getServiceList() {
+		return serviceList;
+	}
+
 	
-	/**
-	 * book的微服務
-	 * */
-	private MicroServiceStatus bookService;
-	
-
-	public MicroServiceStatus getAuthNService() {
-		return authNService;
-	}
-
-	public void setAuthNService(MicroServiceStatus authNService) {
-		this.authNService = authNService;
-	}
-
-	public MicroServiceStatus getBookService() {
-		return bookService;
-	}
-
-	public void setBookService(MicroServiceStatus bookService) {
-		this.bookService = bookService;
-	}
-
 	/**
 	 * 某個微服務的狀態。
 	 * */
-	public class MicroServiceStatus {
+	public class MicroService {
 		
 		/**
+		 * 微服務的名字。
+		 * */
+		private String name;
+
+		/**
 		 * 微服務是否正對外提供業務服務，只要集群內
-		 * 其中一個server有開，就會對外提供服務。
+		 * 其中一個實例有開，就會對外提供服務。
 		 * */
 		private boolean inService;
 
 		/**
-		 * 微服務的集群，由數個微服務的server組成。
+		 * 微服務的集群，由數個伺服端組成。
 		 * */
-		private List<ServerInstance> cluster;
+		private List<ServiceInstance> cluster;
 
-		
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
 		public boolean isInService() {
 			return inService;
 		}
@@ -63,21 +60,20 @@ public class MonitorRes {
 			this.inService = inService;
 		}
 
-		public List<ServerInstance> getCluster() {
+		public List<ServiceInstance> getCluster() {
 			return cluster;
 		}
 
-		public void setCluster(List<ServerInstance> cluster) {
+		public void setCluster(List<ServiceInstance> cluster) {
 			this.cluster = cluster;
 		}
-
 		
 	}
 	
 	/**
-	 * 某個微服務的其中一個server實例的資訊。
+	 * 某個微服務集群內的其中一個實例的資訊。
 	 * */
-	public class ServerInstance {
+	public class ServiceInstance {
 		
 		/**
 		 * 伺服端名字。
