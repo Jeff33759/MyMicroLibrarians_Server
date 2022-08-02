@@ -41,7 +41,7 @@
 
 14. 使用RestTemplate實現各微服務間的溝通，以及與政府資料開放平台串接，下載DEMO用的館藏資料。
 
-15. 使用Mockito實作單元測試，使用MockMvc實作整合測試(只有Book Server有整合測試)。
+15. 使用JUnit5+Mockito實作單元測試，使用Junit5+MockMvc實作整合測試(只有Book Server有整合測試)。
 
 16. 使用MongoDB作為資料庫，並使用JPQL作為查詢語言，實現包含分頁查詢等等的基本CRUD功能。
 
