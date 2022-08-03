@@ -10,6 +10,9 @@
 
 本專題利用Spring Boot實作了分散式系統的模型，希望在學習使用Spring Cloud之前，能夠藉由實作本專題，更加了解分散式系統的運行機制。
 
+DEMO影片: https://www.youtube.com/watch?v=FfudSmjdIug
+
+
 <br><br>
 ## 我做到了什麼
 
