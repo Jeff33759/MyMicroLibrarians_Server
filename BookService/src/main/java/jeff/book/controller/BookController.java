@@ -110,7 +110,6 @@ public class BookController {
 		MyBook beReplacedBook = bookService.replaceBook(reqBody,bookId);
 //		若對location欄位的URL發Get請求，將可以得到創建後的新資料
         URI location = ServletUriComponentsBuilder
-//        		.fromPath("/book")
         		.fromCurrentRequest()
         		.host(param.GATEWAY_IP)
         		.port(param.GATEWAY_PORT)
@@ -134,7 +133,6 @@ public class BookController {
 		MyBook beUpdatedBook = bookService.updateBook(reqBody, bookId);
 //		若對location欄位的URL發Get請求，將可以得到創建後的新資料
         URI location = ServletUriComponentsBuilder
-//        		.fromPath("/book")
         		.fromCurrentRequest()
         		.host(param.GATEWAY_IP)
         		.port(param.GATEWAY_PORT)
