@@ -147,7 +147,7 @@ public class BookController {
 	 * 根據ID刪除某本書
 	 * */
 	@DeleteMapping(path = OpenApiConst.Path.BOOK_D)
-	public ResponseEntity<MyBook> deleteBook(@NotBlank(message = 
+	public ResponseEntity<Void> deleteBook(@NotBlank(message = 
 			"'id' must not be null and must contain at least one non-whitespace character. ") 
 	@PathVariable("id") String bookId){
 		bookService.deleteBook(bookId);
