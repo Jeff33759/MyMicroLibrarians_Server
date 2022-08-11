@@ -25,7 +25,7 @@ DEMO影片: https://www.youtube.com/watch?v=FfudSmjdIug
 
 5. Refresh Token與Access Token的實作。
 
-6. Refresh Token Signature使用HS256對稱型加密，加密與解密都由同個伺服端負責；Access Token Signature使用RS256非對稱型加密，私鑰加密、公鑰解密，加密與解密分別由不同伺服端負責。
+6. Refresh Token使用HS256對稱型加密，簽章(製作Token)與驗證(解析Token)都用同一把密鑰；Access Token使用RS256非對稱型加密，私鑰簽章、公鑰驗證。
 
 7. 實作Spring Security授權保護機制，設定基於角色(Role)的授權保護，保護一些只有特定角色才能訪問的API。
 
@@ -33,7 +33,7 @@ DEMO影片: https://www.youtube.com/watch?v=FfudSmjdIug
 
 9. 針對CORS的處理，讓Web瀏覽器能夠將跨來源的資料使用於JS，實現前後端分離。
 
-10. gateway與各微服務實例之間，以Http協議實現交握註冊，並以定時任務建立心跳機制，確認彼此是否還活著。
+10. gateway與各微服務實例之間，以Http協議實現交握註冊，並建立多執行緒的定時任務來實現心跳機制，確認彼此是否還活著。
 
 11. gateway以亂數實現負載平衡(參考ApiGateway > jeff.apigateway.common.util.LoadBalanceUtil)。
 
