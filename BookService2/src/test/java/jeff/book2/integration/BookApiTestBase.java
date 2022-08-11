@@ -1,19 +1,14 @@
 package jeff.book2.integration;
 
-import java.net.HttpURLConnection;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.client.RestTemplate;
 
 import jeff.book2.AppInitRunner;
 import jeff.book2.dao.BookRepository;
@@ -21,63 +16,42 @@ import jeff.book2.filter.SourceAuthenticationFilter;
 import jeff.book2.model.po.MyBook;
 
 /**
- * 針對Book各API整合測試用的基底，把一些所有測試的公同方法參數寫在這裡。</p>
- * 為了不跟可能正在運行中的Book Server衝突，所以測試環境的
- * Book Server會運行於隨機PORT上。
+ * 針對Book各API整合測試用的基底，把一些所有測試的公同方法參數寫在這裡。
  * </p>
  * 測試環境的{@link SourceAuthenticationFilter}和{@link AppInitRunner}
- * 不會註冊為Spring Bean，所以也不會執行。
+ * 不會註冊為Spring Bean，所以也不會執行；此外測試用的DB也與正式環境不同。
  * 
  * @author Jeff Huang
  * */
 @AutoConfigureMockMvc
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 public class BookApiTestBase {
-	
+
 	@Autowired
 	protected BookRepository bookRepo;
 	
     @Autowired
     protected MockMvc mockMvc;
-	
-	/**
-	 * 得到當前測試程式所運行的port，為隨機port。
-	 * */
-	@LocalServerPort 
-	protected int port;
-	
-	/**
-	 * 測試環境的BookServer的網域，
-	 * 於{@link testPreHandle}進行初始化。
-	 * */
-    protected String domain;
     
-    /**
-     * 模擬客戶端發給BookServer的請求，
-     * 於{@link testPreHandle}進行初始化。
-     * */
-    protected RestTemplate mockReq;
 
     /**
      * 模擬客戶端發給BookServer的請求的標頭，
-     * 於{@link testPreHandle}進行初始化。
+     * 於{@link #preprocessingForEachTestCase}進行初始化。
      * */
-    protected HttpHeaders mockHttpHeaders; //引入Spring的
+    protected HttpHeaders mockHttpHeaders;
 	
     
 	/**
 	 * 每一次測試方法在執行前，先執行一次本方法。
-	 * 準備每個測試案例都有的參數元件，但參數元件可能會根據案例不同
-	 * 而有所變化，所以每個案例都要額外新增一個。
+	 * 準備每個測試案例都要的參數元件，因為測試案例之間不應該互相共用
+	 * 元件，所以用@BeforeEach，每個測試案例都會new一個自己用的元件。
 	 **/
 	@BeforeEach
 	protected void preprocessingForEachTestCase() {
-		domain = "http://127.0.0.1:" + port;
 		mockHttpHeaders = new HttpHeaders();
 		mockHttpHeaders.add(HttpHeaders.CONTENT_TYPE, 
 				MediaType.APPLICATION_JSON_VALUE);
-        mockReq = genRestTemplate();
-        addBooksIntoDBForDemo();
+		addBooksIntoDBForDemo();
     }
 
 	/**
@@ -176,22 +150,4 @@ public class BookApiTestBase {
 		bookRepo.insert(myBook5);
 	}
 	
-    /**
-     * 默認情況下，RestTemplate使用標準JDK{@link HttpURLConnection}做為客戶端去發出請求，
-     * 但{@link HttpURLConnection}不支持PATCH方法，所以這裡不使用{@link SimpleClientHttpRequestFactory}
-     * 去配置，而是通過{@link HttpComponentsClientHttpRequestFactory}配置其他的底層實作當成Http客戶端。
-     * 記得Maven先引入org.apache.httpcomponents函式庫。
-     * */
-	private RestTemplate genRestTemplate() {
-    	HttpComponentsClientHttpRequestFactory factory = 
-    			new HttpComponentsClientHttpRequestFactory();
-//		連線超時時間
-    	factory.setConnectTimeout(2000);
-//		資料傳輸超時時間(連線成功，但對方服務端處理太慢時)
-    	factory.setReadTimeout(2000);
-    	RestTemplate template = new RestTemplate();
-    	template.setRequestFactory(factory);
-    	return template;
-	}
-
 }
