@@ -25,7 +25,7 @@ DEMO影片: https://www.youtube.com/watch?v=FfudSmjdIug
 
 5. Refresh Token與Access Token的實作。
 
-6. Refresh Token使用HS256對稱型加密，簽章(製作Token)與驗證(解析Token)都用同一把密鑰；Access Token使用RS256非對稱型加密，私鑰簽章、公鑰驗證。
+6. Refresh Token使用HS256對稱型加密演算法，簽章(製作Token)與驗證(解析Token)都用同一把密鑰；Access Token使用RS256非對稱型加密演算法，私鑰簽章、公鑰驗證。
 
 7. 實作Spring Security授權保護機制，設定基於角色(Role)的授權保護，保護一些只有特定角色才能訪問的API。
 
